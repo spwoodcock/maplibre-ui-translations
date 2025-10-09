@@ -1,7 +1,7 @@
 {
   "name": "maplibre-ui-translations",
   "version": "0.1.0",
-  "description": "Localized UI translations for MapLibre GL JS controls.",
+  "description": "Community translations for the default MapLibre UI.",
   "author": "Sam Woodcock",
   "license": "MIT",
   "type": "module",

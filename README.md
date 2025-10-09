@@ -1,6 +1,6 @@
 # MapLibre UI Translations
 
-🌍 Community translations for MapLibre GL JS UI controls.
+🌍 Community translations for the default MapLibre UI.
 
 - A small plugin to bundle translation files with MapLibre.
 - Allows switching locale for UI elements in MapLibre, such as
