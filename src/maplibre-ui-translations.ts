@@ -9,5 +9,3 @@ import { ja } from './ja';
 import { ru } from './ru';
 
 export { fr, es, de, it, ne, pt, ptBR, ja, ru };
-
-export default { fr, es, de, it, ne, pt, ptBR, ja, ru };

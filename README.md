@@ -15,9 +15,10 @@ pnpm install maplibre-ui-translations
 
 ## Usage
 
-Use a single locale:
+### A single locale
 
 ```js
+import maplibregl from 'maplibre-gl';
 // Each translation can be imported by it's 2-letter ISO code
 import { fr } from 'maplibre-ui-translations';
 
@@ -30,9 +31,10 @@ new maplibregl.Map({
 });
 ```
 
-Set the locale dynamically:
+### Multiple locale options
 
 ```ts
+import maplibregl from 'maplibre-gl';
 // The default English locale
 import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
 // Locales from this plugin
