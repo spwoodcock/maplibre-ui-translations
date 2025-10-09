@@ -63,3 +63,47 @@ new maplibregl.Map({
     locale: selectedLocale,
 });
 ```
+
+### Changing the locale after the map has loaded
+
+There is a helper function `updateMaplibreLocale` available for you:
+
+```ts
+import maplibregl from 'maplibre-gl';
+import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
+import { updateMaplibreLocale, fr, es, de, it, ne, ptBR } from 'maplibre-ui-translations';
+
+const localeMap: Record<string, Record<string, string>> = {
+  en: defaultLocale,
+  fr,
+  es,
+  de,
+  it,
+  ne,
+  'pt-BR': ptBR,
+};
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://demotiles.maplibre.org/globe.json',
+  center: [0, 0],
+  zoom: 2,
+  locale: defaultLocale,
+});
+
+document.querySelector('#lang-switcher')?.addEventListener('change', (e) => {
+  const selectedCode = (e.target as HTMLSelectElement).value;
+  updateMaplibreLocale(map, selectedCode);
+});
+```
+
+### Loading via CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/index.umd.js"></script>
+
+<script>
+    const { updateMaplibreLocale, fr, es, de, it, ne, pt, ptBR, ja, ru } = MapLibreUITranslations;
+    ...
+</script>
+```
