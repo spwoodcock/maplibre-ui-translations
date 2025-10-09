@@ -1,0 +1,28 @@
+{
+  "name": "maplibre-ui-translations",
+  "version": "0.1.0",
+  "description": "Localized UI translations for MapLibre GL JS controls.",
+  "author": "Sam Woodcock",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/maplibre-ui-translations.js",
+  "types": "dist/maplibre-ui-translations.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "maplibre",
+    "maplibre-gl",
+    "translations",
+    "i18n",
+    "localization",
+    "maps"
+  ],
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
