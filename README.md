@@ -3,9 +3,21 @@
 🌍 Community translations for the default MapLibre UI.
 
 - A small plugin to bundle translation files with MapLibre.
-- Allows switching locale for UI elements in MapLibre, such as
-  control tooltips.
-- Open for contribution.
+- Uses MapLibre’s internal locale (map._locale) to apply
+  translations to UI controls.
+- Also allows dynamic switching of the locale via a switcher.
+
+> [!NOTE]
+> For now translation contributions can be made via PR.
+>
+> Eventually I will set up a Weblate project for community
+> translations.
+
+## MapLibre has text?
+
+Not much, but in a few places such as tooltips:
+
+![zoom-tooltip](./maplibre-zoom-tooltip.png)
 
 ## Install
 
