@@ -11,6 +11,19 @@ import { ptBR } from './pt-BR';
 import { ja } from './ja';
 import { ru } from './ru';
 
+const maplibreLocales: Record<string, Record<string, string>> = {
+    en: defaultLocale,
+    fr,
+    es,
+    de,
+    it,
+    ne,
+    pt,
+    'pt-BR': ptBR,
+    ja,
+    ru,
+};
+
 // Type for controls with their internal properties
 interface ControlWithContainer {
     // Most controls have _container
@@ -28,20 +41,16 @@ interface ControlWithContainer {
 function updateMaplibreLocale(map: maplibre.Map, localeCode: string) {
     if (!map) return;
 
-    const localeMap: Record<string, Record<string, string>> = {
-        en: defaultLocale,
-        fr,
-        es,
-        de,
-        it,
-        ne,
-        pt,
-        'pt-BR': ptBR,
-        ja,
-        ru,
-    };
+    let localeToUse = maplibreLocales[localeCode];
+    if (!localeToUse) {
+        console.warn(
+            `updateMaplibreLocale: Locale '${localeCode}' not found. Falling back to English ('en').`
+        );
+        localeToUse = defaultLocale;
+        localeCode = 'en';
+    }
 
-    const newLocale = { ...defaultLocale, ...(localeMap[localeCode] || {}) };
+    const newLocale = { ...defaultLocale, ...(maplibreLocales[localeCode] || {}) };
 
     // Capture all existing controls with their actual positions
     const controlsWithPositions: Array<{ control: any; position?: string }> = [];
@@ -101,6 +110,7 @@ function updateMaplibreLocale(map: maplibre.Map, localeCode: string) {
 
 export {
     updateMaplibreLocale,
+    maplibreLocales,
     fr,
     es,
     de,

@@ -50,22 +50,11 @@ import maplibregl from 'maplibre-gl';
 // The default English locale
 import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
 // Locales from this plugin
-import { fr, es, de, it, ne, ptBR } from 'maplibre-ui-translations';
-
-// We need this map to link in the defaultLocale, and map ISO code variations such as pt-BR
-const localeMap: Record<string, Record<string, string>> = {
-    en: defaultLocale,
-    fr,
-    es,
-    de,
-    it,
-    ne,
-    'pt-BR': ptBR,
-};
+import { maplibreLocales } from 'maplibre-ui-translations';
 
 // Set locale from locale switcher, browser context, or another source
 const selectedLocaleCode = getUserLocale(); // e.g., "fr" or "pt-BR"
-const selectedLocale = { ...defaultLocale, ...(localeMap[selectedLocaleCode] ?? defaultLocale) };
+const selectedLocale = { ...defaultLocale, ...(maplibreLocales[selectedLocaleCode] ?? defaultLocale) };
 
 new maplibregl.Map({
     container: 'map',
@@ -83,17 +72,7 @@ There is a helper function `updateMaplibreLocale` available for you:
 ```ts
 import maplibregl from 'maplibre-gl';
 import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
-import { updateMaplibreLocale, fr, es, de, it, ne, ptBR } from 'maplibre-ui-translations';
-
-const localeMap: Record<string, Record<string, string>> = {
-  en: defaultLocale,
-  fr,
-  es,
-  de,
-  it,
-  ne,
-  'pt-BR': ptBR,
-};
+import { updateMaplibreLocale, maplibreLocales } from 'maplibre-ui-translations';
 
 const map = new maplibregl.Map({
   container: 'map',
@@ -115,7 +94,7 @@ document.querySelector('#lang-switcher')?.addEventListener('change', (e) => {
 <script src="https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/index.umd.js"></script>
 
 <script>
-    const { updateMaplibreLocale, fr, es, de, it, ne, pt, ptBR, ja, ru } = MapLibreUITranslations;
+    const { updateMaplibreLocale, maplibreLocales, fr, es, de, it, ne, pt, ptBR, ja, ru } = MapLibreUITranslations;
     ...
 </script>
 ```
