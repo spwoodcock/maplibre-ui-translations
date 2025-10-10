@@ -91,7 +91,7 @@ document.querySelector('#lang-switcher')?.addEventListener('change', (e) => {
 ### Loading via CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/maplibre-ui-translations.umd.js"></script>
 
 <script>
     const { updateMaplibreLocale, maplibreLocales, fr, es, de, it, ne, pt, ptBR, ja, ru } = MapLibreUITranslations;

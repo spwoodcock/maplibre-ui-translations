@@ -5,9 +5,16 @@
   "author": "Sam Woodcock",
   "license": "MIT",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "browser": "dist/index.umd.js",
+  "main": "dist/maplibre-ui-translations.umd.js",
+  "module": "dist/maplibre-ui-translations.js",
+  "types": "dist/maplibre-ui-translations.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/maplibre-ui-translations.js",
+      "require": "./dist/maplibre-ui-translations.umd.js",
+      "types": "./dist/maplibre-ui-translations.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
