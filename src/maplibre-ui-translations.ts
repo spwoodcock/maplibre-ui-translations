@@ -1,123 +1,27 @@
-import type maplibre from 'maplibre-gl';
-import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
-
-import { fr } from './fr';
-import { es } from './es';
-import { de } from './de';
-import { it } from './it';
-import { ne } from './ne';
-import { pt } from './pt';
-import { ptBR } from './pt-BR';
-import { ja } from './ja';
-import { ru } from './ru';
-
-const maplibreLocales: Record<string, Record<string, string>> = {
-    en: defaultLocale,
-    fr,
-    es,
-    de,
-    it,
-    ne,
-    pt,
-    'pt-BR': ptBR,
-    ja,
-    ru,
-};
-
-// Type for controls with their internal properties
-interface ControlWithContainer {
-    // Most controls have _container
-    _container?: HTMLElement;
-    // Some controls have _controlContainer, such as fullscreen control
-    // (the _container is the actual map container in that case)
-    _controlContainer?: HTMLElement;
-    getDefaultPosition?: () => string;
-}
-
-/**
- * Updates the UI locale of a MapLibre map instance at runtime.
- * This works by removing and re-adding all controls with the new locale applied.
- */
-function updateMaplibreLocale(map: maplibre.Map, localeCode: string) {
-    if (!map) return;
-
-    let localeToUse = maplibreLocales[localeCode];
-    if (!localeToUse) {
-        console.warn(
-            `updateMaplibreLocale: Locale '${localeCode}' not found. Falling back to English ('en').`
-        );
-        localeToUse = defaultLocale;
-        localeCode = 'en';
-    }
-
-    const newLocale = { ...defaultLocale, ...(maplibreLocales[localeCode] || {}) };
-
-    // Capture all existing controls with their actual positions
-    const controlsWithPositions: Array<{ control: any; position?: string }> = [];
-    
-    if ((map as any)._controls) {
-        const container = (map as any)._controlContainer as HTMLElement | undefined;
-        
-        for (const control of (map as any)._controls as ControlWithContainer[]) {
-            let position: string | undefined;
-            
-            // Try _controlContainer first (for controls like FullscreenControl)
-            // then fall back to _container (for most other controls)
-            const controlElement = control._controlContainer || control._container;
-            
-            if (controlElement && container) {
-                // Check which corner contains this control's element
-                const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
-                for (const pos of positions) {
-                    const corner = container.querySelector(`.maplibregl-ctrl-${pos}`);
-                    if (corner && corner.contains(controlElement)) {
-                        position = pos;
-                        break;
-                    }
-                }
-            }
-            
-            // Fallback to getDefaultPosition if we couldn't find it in DOM
-            if (!position && control.getDefaultPosition) {
-                position = control.getDefaultPosition();
-            }
-            
-            controlsWithPositions.push({ control, position });
-        }
-    }
-
-    // Remove all controls
-    for (const { control } of controlsWithPositions) {
-        try {
-            map.removeControl(control);
-        } catch (err) {
-            console.warn('Error removing control:', err);
-        }
-    }
-
-    // Update internal locale
-    (map as any)._locale = newLocale;
-
-    // Re-add controls with their original positions
-    for (const { control, position } of controlsWithPositions) {
-        try {
-            map.addControl(control, position as any);
-        } catch (err) {
-            console.warn('Error re-adding control:', err);
-        }
-    }
-}
-
-export {
-    updateMaplibreLocale,
-    maplibreLocales,
-    fr,
-    es,
-    de,
-    it,
-    ne,
-    pt,
-    ptBR,
-    ja,
-    ru
+export const de = {
+  'AttributionControl.ToggleAttribution': 'Zuschreibung umschalten',
+  'AttributionControl.MapFeedback': 'Kartenrückmeldung',
+  'FullscreenControl.Enter': 'Vollbild aktivieren',
+  'FullscreenControl.Exit': 'Vollbild verlassen',
+  'GeolocateControl.FindMyLocation': 'Meinen Standort finden',
+  'GeolocateControl.LocationNotAvailable': 'Standort nicht verfügbar',
+  'LogoControl.Title': 'MapLibre-Logo',
+  'Map.Title': 'Karte',
+  'Marker.Title': 'Kartenmarker',
+  'NavigationControl.ResetBearing': 'Ausrichtung auf Norden zurücksetzen',
+  'NavigationControl.ZoomIn': 'Hineinzoomen',
+  'NavigationControl.ZoomOut': 'Rauszoomen',
+  'Popup.Close': 'Popup schließen',
+  'ScaleControl.Feet': 'ft',
+  'ScaleControl.Meters': 'm',
+  'ScaleControl.Kilometers': 'km',
+  'ScaleControl.Miles': 'mi',
+  'ScaleControl.NauticalMiles': 'nm',
+  'GlobeControl.Enable': 'Globus aktivieren',
+  'GlobeControl.Disable': 'Globus deaktivieren',
+  'TerrainControl.Enable': 'Gelände aktivieren',
+  'TerrainControl.Disable': 'Gelände deaktivieren',
+  'CooperativeGesturesHandler.WindowsHelpText': 'Verwenden Sie Strg + Scroll zum Zoomen der Karte',
+  'CooperativeGesturesHandler.MacHelpText': 'Verwenden Sie ⌘ + Scroll zum Zoomen der Karte',
+  'CooperativeGesturesHandler.MobileHelpText': 'Verwenden Sie zwei Finger, um die Karte zu verschieben',
 };
