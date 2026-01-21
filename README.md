@@ -7,11 +7,11 @@
   translations to UI controls.
 - Also allows dynamic switching of the locale via a switcher.
 
-> [!NOTE]
-> For now translation contributions can be made via PR.
+> [!IMPORTANT]
+> Translation contributions can be made via PR.
 >
-> Eventually I will set up a Weblate project for community
-> translations.
+> Or if preferred, please use the Weblate project hosted here:
+> https://hosted.weblate.org/projects/maplibre-ui-translations/maplibre-ui-translations
 
 ## MapLibre has text?
 
