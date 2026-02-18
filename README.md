@@ -98,3 +98,14 @@ document.querySelector('#lang-switcher')?.addEventListener('change', (e) => {
     ...
 </script>
 ```
+
+## License
+
+All code is licensed under MIT, see [LICENSE.md](./LICENSE.md).
+
+The translation text content is licensed under
+[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/deed.en),
+as listed on the Weblate project.
+
+Both licenses a permissive licenses with very few restrictions,
+but cover different use cases (code vs creative content).
