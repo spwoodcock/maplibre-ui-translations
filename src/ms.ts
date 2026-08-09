@@ -1,4 +1,4 @@
-export const de = {
+export const ms = {
   'AttributionControl.ToggleAttribution': 'Zuschreibung umschalten',
   'AttributionControl.MapFeedback': 'Kartenrückmeldung',
   'FullscreenControl.Enter': 'Vollbild aktivieren',
