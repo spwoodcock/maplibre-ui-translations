@@ -110,28 +110,6 @@ MapLibre GL JS 6 is ESM only, so load both as modules:
 </script>
 ```
 
-## Available locales
-
-Bundled in the published package. Generated from [`src/locales`](./src/locales)
-by `npm run docs:locales` - don't edit by hand.
-
-<!-- locales:start -->
-| Code | Language | Import |
-| --- | --- | --- |
-| `de` | German | `de` |
-| `en` | English | `en` / `defaultLocale` |
-| `es` | Spanish | `es` |
-| `et` | Estonian | `et` |
-| `fr` | French | `fr` |
-| `it` | Italian | `it` |
-| `ja` | Japanese | `ja` |
-| `kw` | Cornish | `kw` |
-| `ne` | Nepali | `ne` |
-| `pt` | Portuguese | `pt` |
-| `pt-BR` | Brazilian Portuguese | `ptBR` |
-| `ru` | Russian | `ru` |
-<!-- locales:end -->
-
 ## Translation status
 
 A locale below 100% is still safe to use - untranslated strings fall back to English.

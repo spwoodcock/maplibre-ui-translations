@@ -31,9 +31,8 @@
     "build:umd": "rolldown -c",
     "build:cjs-types": "node scripts/emit-cjs-types.mjs",
     "check:locales": "node test/check-locales.mjs",
-    "docs:locales": "node scripts/locale-table.mjs --write",
     "demo": "npm run build && echo 'Demo: http://localhost:4173/test/' && serve . --listen 4173",
-    "test": "npm run build && npm run check:locales && node scripts/locale-table.mjs",
+    "test": "npm run build && npm run check:locales",
     "prepublishOnly": "npm test"
   },
   "keywords": [
