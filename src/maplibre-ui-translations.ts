@@ -5,6 +5,7 @@ import { de } from './locales/de.js';
 import { es } from './locales/es.js';
 import { et } from './locales/et.js';
 import { fr } from './locales/fr.js';
+import { id } from './locales/id.js';
 import { it } from './locales/it.js';
 import { ja } from './locales/ja.js';
 import { kw } from './locales/kw.js';
@@ -23,6 +24,7 @@ const maplibreLocales = {
     es,
     et,
     fr,
+    id,
     it,
     ja,
     kw,
