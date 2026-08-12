@@ -7,9 +7,8 @@
     <meta charset="UTF-8" />
     <title>MapLibre UI Locale Switcher Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- MapLibre CSS -->
     <link
-    href="https://unpkg.com/maplibre-gl@5.9.0/dist/maplibre-gl.css"
+    href="https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl.css"
     rel="stylesheet"
     />
     <style>
@@ -34,8 +33,11 @@
             <option value="fr">Français</option>
             <option value="es">Español</option>
             <option value="de">Deutsch</option>
+            <option value="et">Eesti</option>
             <option value="it">Italiano</option>
+            <option value="kw">Kernewek</option>
             <option value="ne">नेपाली</option>
+            <option value="pt">Português</option>
             <option value="pt-BR">Português (Brasil)</option>
             <option value="ja">日本語</option>
             <option value="ru">Русский</option>
@@ -44,15 +46,10 @@
     
     <div id="map"></div>
     
-    <!-- MapLibre JS -->
-    <script src="https://unpkg.com/maplibre-gl@5.9.0/dist/maplibre-gl.js"></script>
-    <!-- Translations plugin -->
-    <script src="../dist/maplibre-ui-translations.umd.js"></script>
-    
-    <script>
-        const { updateMaplibreLocale, maplibreLocales } = MapLibreUITranslations;
+    <script type="module">
+        import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.3.0/dist/maplibre-gl.mjs';
+        import { updateMaplibreLocale } from '../dist/maplibre-ui-translations.js';
 
-        // Init maplibre and get default locale from map (english)
         const map = new maplibregl.Map({
             container: 'map',
             style: 'https://demotiles.maplibre.org/globe.json',
@@ -61,32 +58,14 @@
             attributionControl: false, // important: we add our own AttributionControl
         });
 
-        // keep references to control instances so we can remove them below
-        let navControl = null;
-        let fullscreenControl = null;
-        let scaleControl = null;
-        let attributionControl = null;
-        
-        function initControls() {
-            // create fresh control instances (they will read map._locale at add time)
-            navControl = new maplibregl.NavigationControl({ showCompass: true });
-            map.addControl(navControl, 'top-left');
-            
-            fullscreenControl = new maplibregl.FullscreenControl();
-            map.addControl(fullscreenControl, 'top-left');
-            
-            scaleControl = new maplibregl.ScaleControl();
-            map.addControl(scaleControl, 'bottom-left');
-            
-            attributionControl = new maplibregl.AttributionControl({ compact: false });
-            map.addControl(attributionControl, 'bottom-right');
-        }
-
-        // init controls once map loaded
+        // Controls read map._locale when added, so they must be added after the map exists
         map.on('load', () => {
-            initControls();
+            map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-left');
+            map.addControl(new maplibregl.FullscreenControl(), 'top-left');
+            map.addControl(new maplibregl.ScaleControl(), 'bottom-left');
+            map.addControl(new maplibregl.AttributionControl({ compact: false }), 'bottom-right');
         });
-        
+
         document
         .getElementById('lang-switcher')
         .addEventListener('change', e => updateMaplibreLocale(map, e.target.value));
