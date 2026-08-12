@@ -1,28 +1,40 @@
 {
   "name": "maplibre-ui-translations",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Community translations for the default MapLibre UI.",
   "author": "Sam Woodcock",
   "license": "MIT",
   "type": "module",
-  "main": "dist/maplibre-ui-translations.umd.js",
+  "main": "dist/maplibre-ui-translations.umd.cjs",
   "module": "dist/maplibre-ui-translations.js",
   "types": "dist/maplibre-ui-translations.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/maplibre-ui-translations.js",
-      "require": "./dist/maplibre-ui-translations.umd.js",
-      "types": "./dist/maplibre-ui-translations.d.ts"
-    }
+      "import": {
+        "types": "./dist/maplibre-ui-translations.d.ts",
+        "default": "./dist/maplibre-ui-translations.js"
+      },
+      "require": {
+        "types": "./dist/maplibre-ui-translations.d.cts",
+        "default": "./dist/maplibre-ui-translations.umd.cjs"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "npm run build:esm && npm run build:umd",
+    "build": "npm run build:esm && npm run build:umd && npm run build:cjs-types",
     "build:esm": "tsc",
     "build:umd": "rolldown -c",
-    "prepublishOnly": "npm run build"
+    "build:cjs-types": "node scripts/emit-cjs-types.mjs",
+    "check:locales": "node test/check-locales.mjs",
+    "docs:locales": "node scripts/locale-table.mjs --write",
+    "demo": "npm run build && echo 'Demo: http://localhost:4173/test/' && serve . --listen 4173",
+    "test": "npm run build && npm run check:locales && node scripts/locale-table.mjs",
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "maplibre",
@@ -33,7 +45,9 @@
     "maps"
   ],
   "devDependencies": {
+    "maplibre-gl": "^6.3.0",
     "rolldown": "1.0.0-beta.42",
+    "serve": "^14.2.6",
     "typescript": "^5.9.3"
   },
   "peerDependencies": {

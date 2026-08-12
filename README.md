@@ -30,8 +30,8 @@ pnpm install maplibre-ui-translations
 ### A single locale
 
 ```js
-import maplibregl from 'maplibre-gl';
-// Each translation can be imported by it's 2-letter ISO code
+import * as maplibregl from 'maplibre-gl';
+// Each translation is exported under its locale code
 import { fr } from 'maplibre-ui-translations';
 
 new maplibregl.Map({
@@ -46,15 +46,12 @@ new maplibregl.Map({
 ### Multiple locale options
 
 ```ts
-import maplibregl from 'maplibre-gl';
-// The default English locale
-import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
-// Locales from this plugin
-import { maplibreLocales } from 'maplibre-ui-translations';
+import * as maplibregl from 'maplibre-gl';
+import { defaultLocale, maplibreLocales } from 'maplibre-ui-translations';
 
 // Set locale from locale switcher, browser context, or another source
 const selectedLocaleCode = getUserLocale(); // e.g., "fr" or "pt-BR"
-const selectedLocale = { ...defaultLocale, ...(maplibreLocales[selectedLocaleCode] ?? defaultLocale) };
+const selectedLocale = { ...defaultLocale, ...(maplibreLocales[selectedLocaleCode] ?? {}) };
 
 new maplibregl.Map({
     container: 'map',
@@ -65,14 +62,23 @@ new maplibregl.Map({
 });
 ```
 
+> [!IMPORTANT]
+> If you previously got the English strings from
+> `maplibre-gl/src/ui/default_locale`, that deep import no longer resolves in
+> MapLibre GL JS 6. This package now ships them itself, as `en` and `defaultLocale`:
+>
+> ```diff
+> - import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
+> + import { defaultLocale } from 'maplibre-ui-translations';
+> ```
+
 ### Changing the locale after the map has loaded
 
 There is a helper function `updateMaplibreLocale` available for you:
 
 ```ts
-import maplibregl from 'maplibre-gl';
-import { defaultLocale } from 'maplibre-gl/src/ui/default_locale';
-import { updateMaplibreLocale, maplibreLocales } from 'maplibre-ui-translations';
+import * as maplibregl from 'maplibre-gl';
+import { updateMaplibreLocale, defaultLocale } from 'maplibre-ui-translations';
 
 const map = new maplibregl.Map({
   container: 'map',
@@ -88,16 +94,56 @@ document.querySelector('#lang-switcher')?.addEventListener('change', (e) => {
 });
 ```
 
+Any string a locale does not translate falls back to the English default,
+and an unknown locale code logs a warning and falls back to English.
+
 ### Loading via CDN
 
-```html
-<script src="https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/maplibre-ui-translations.umd.js"></script>
+MapLibre GL JS 6 is ESM only, so load both as modules:
 
-<script>
-    const { updateMaplibreLocale, maplibreLocales, fr, es, de, it, ne, pt, ptBR, ja, ru } = MapLibreUITranslations;
+```html
+<script type="module">
+    import * as maplibregl from 'https://unpkg.com/maplibre-gl@6/dist/maplibre-gl.mjs';
+    import { updateMaplibreLocale, maplibreLocales, defaultLocale, fr }
+        from 'https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/maplibre-ui-translations.js';
     ...
 </script>
 ```
+
+## Available locales
+
+Bundled in the published package. Generated from [`src/locales`](./src/locales)
+by `npm run docs:locales` - don't edit by hand.
+
+<!-- locales:start -->
+| Code | Language | Import |
+| --- | --- | --- |
+| `de` | German | `de` |
+| `en` | English | `en` / `defaultLocale` |
+| `es` | Spanish | `es` |
+| `et` | Estonian | `et` |
+| `fr` | French | `fr` |
+| `it` | Italian | `it` |
+| `ja` | Japanese | `ja` |
+| `kw` | Cornish | `kw` |
+| `ne` | Nepali | `ne` |
+| `pt` | Portuguese | `pt` |
+| `pt-BR` | Brazilian Portuguese | `ptBR` |
+| `ru` | Russian | `ru` |
+<!-- locales:end -->
+
+## Translation status
+
+A locale below 100% is still safe to use - untranslated strings fall back to English.
+
+[![Translation status](https://hosted.weblate.org/widgets/maplibre-ui-translations/-/maplibre-ui-translations/multi-auto.svg)](https://hosted.weblate.org/engage/maplibre-ui-translations/)
+
+## Contributing translations
+
+Translation files live in [`src/locales`](./src/locales), one file per locale,
+with [`src/locales/en.ts`](./src/locales/en.ts) as the English source. Every
+locale must define all of the UI string IDs - `npm test` fails the build
+otherwise.
 
 ## License
 
