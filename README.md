@@ -11,7 +11,7 @@
 > Translation contributions can be made via PR.
 >
 > Or if preferred, please use the Weblate project hosted here:
-> https://hosted.weblate.org/projects/maplibre-ui-translations/maplibre-ui-translations
+> [https://hosted.weblate.org/projects/maplibre-ui-translations/plugin](https://hosted.weblate.org/projects/maplibre-ui-translations/plugin)
 
 ## MapLibre has text?
 
