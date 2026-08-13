@@ -47,11 +47,10 @@ new maplibregl.Map({
 
 ```ts
 import * as maplibregl from 'maplibre-gl';
-import { defaultLocale, maplibreLocales } from 'maplibre-ui-translations';
+import { getMaplibreLocale } from 'maplibre-ui-translations';
 
-// Set locale from locale switcher, browser context, or another source
-const selectedLocaleCode = getUserLocale(); // e.g., "fr" or "pt-BR"
-const selectedLocale = { ...defaultLocale, ...(maplibreLocales[selectedLocaleCode] ?? {}) };
+// Any code, from a locale switcher, i18next, navigator.language, or elsewhere
+const selectedLocale = getMaplibreLocale(getUserLocale());
 
 new maplibregl.Map({
     container: 'map',
@@ -61,6 +60,11 @@ new maplibregl.Map({
     locale: selectedLocale,
 });
 ```
+
+`getMaplibreLocale` takes a plain `string` and always returns a complete
+`MaplibreLocale`, so nothing needs casting or merging. Codes match
+case-insensitively, `fr-FR` falls back to `fr`, and anything unmatched falls back
+to English. Use `code in maplibreLocales` to detect a bundled locale instead.
 
 > [!IMPORTANT]
 > If you previously got the English strings from
@@ -94,8 +98,7 @@ document.querySelector('#lang-switcher')?.addEventListener('change', (e) => {
 });
 ```
 
-Any string a locale does not translate falls back to the English default,
-and an unknown locale code logs a warning and falls back to English.
+Codes resolve as in `getMaplibreLocale` above, except an unmatched code also warns.
 
 ### Loading via CDN
 
@@ -104,7 +107,7 @@ MapLibre GL JS 6 is ESM only, so load both as modules:
 ```html
 <script type="module">
     import * as maplibregl from 'https://unpkg.com/maplibre-gl@6/dist/maplibre-gl.mjs';
-    import { updateMaplibreLocale, maplibreLocales, defaultLocale, fr }
+    import { getMaplibreLocale, updateMaplibreLocale, maplibreLocales, defaultLocale, fr }
         from 'https://cdn.jsdelivr.net/npm/maplibre-ui-translations@latest/dist/maplibre-ui-translations.js';
     ...
 </script>

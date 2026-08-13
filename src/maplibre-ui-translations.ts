@@ -14,19 +14,31 @@ interface ControlWithContainer {
     getDefaultPosition?: () => string;
 }
 
+const localesByCode = new Map<string, MaplibreLocale>(
+    Object.entries(maplibreLocales).map(([code, locale]) => [code.toLowerCase(), locale])
+);
+
+// Undefined on a miss so callers can warn; regional codes fall back to 'fr-FR' -> 'fr'
+function resolveLocale(localeCode: string): MaplibreLocale | undefined {
+    const code = localeCode.toLowerCase();
+    return localesByCode.get(code) ?? localesByCode.get(code.split('-')[0]);
+}
+
+/** Returns the locale for a code, falling back to the base language then English. */
+function getMaplibreLocale(localeCode: string): MaplibreLocale {
+    return resolveLocale(localeCode) ?? en;
+}
+
 /** Updates the UI locale at runtime by removing and re-adding all controls. */
 function updateMaplibreLocale(map: MapLibreMap, localeCode: string) {
     if (!map) return;
 
-    const translations = (maplibreLocales as Record<string, Partial<MaplibreLocale>>)[localeCode];
-    if (!translations) {
+    const newLocale = resolveLocale(localeCode);
+    if (!newLocale) {
         console.warn(
             `updateMaplibreLocale: Locale '${localeCode}' not found. Falling back to English ('en').`
         );
     }
-
-    // Merge over English so untranslated strings fall back instead of rendering blank
-    const newLocale = { ...en, ...(translations ?? {}) };
 
     const controlsWithPositions: Array<{ control: any; position?: string }> = [];
 
@@ -63,7 +75,7 @@ function updateMaplibreLocale(map: MapLibreMap, localeCode: string) {
         }
     }
 
-    (map as any)._locale = newLocale;
+    (map as any)._locale = newLocale ?? en;
 
     for (const { control, position } of controlsWithPositions) {
         try {
@@ -75,6 +87,7 @@ function updateMaplibreLocale(map: MapLibreMap, localeCode: string) {
 }
 
 export {
+    getMaplibreLocale,
     updateMaplibreLocale,
     // Alias so the old maplibre-gl/src/ui/default_locale import is a one-line swap
     en as defaultLocale
