@@ -1,7 +1,7 @@
 // Weblate's cleanup add-on has twice rewritten files under src/ with the wrong contents
 // (issue #8), and it stays invisible until someone loads the published bundle.
 
-import { readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { createRequire } from 'node:module';
@@ -14,24 +14,47 @@ const failures = [];
 const fail = (msg) => failures.push(msg);
 
 const keys = Object.keys(esm.en);
+const localesDir = resolve(root, 'src/locales');
+const localeFiles = readdirSync(localesDir);
 
-const onDisk = readdirSync(resolve(root, 'src/locales'))
-    .filter((f) => f.endsWith('.ts'))
-    .map((f) => f.replace(/\.ts$/, ''));
-for (const code of onDisk) {
-    if (!(code in esm.maplibreLocales)) {
-        fail(`src/locales/${code}.ts exists but is not exported from maplibreLocales`);
+// Anything but JSON in here means the Weblate file format has been changed back to a line-based one
+const stray = localeFiles.filter((f) => !f.endsWith('.json'));
+if (stray.length) fail(`src/locales holds non-JSON files: ${stray.join(', ')}`);
+
+for (const file of localeFiles.filter((f) => f.endsWith('.json'))) {
+    const code = file.replace(/\.json$/, '');
+    if (!(code in esm.maplibreLocales)) fail(`src/locales/${file} is missing from maplibreLocales`);
+    if (!(code.replace(/-(\w)/g, (_, c) => c.toUpperCase()) in esm)) {
+        fail(`locale '${code}' is not a named export`);
+    }
+    // Braces mean the file was translated as plain text rather than as key/value pairs
+    for (const [key, value] of Object.entries(JSON.parse(readFileSync(resolve(localesDir, file))))) {
+        if (typeof value !== 'string') fail(`${file} key '${key}' is not a string`);
+        else if (/[{}]/.test(key + value)) fail(`${file} key '${key}' holds syntax: ${value}`);
     }
 }
 
-for (const [code, locale] of Object.entries(esm.maplibreLocales)) {
-    const missing = keys.filter((k) => !(k in locale));
-    if (missing.length) fail(`locale '${code}' is missing: ${missing.join(', ')}`);
-    const extra = Object.keys(locale).filter((k) => !keys.includes(k));
-    if (extra.length) fail(`locale '${code}' has unknown keys: ${extra.join(', ')}`);
+// en.json is vendored, so flag any MapLibre release that rewords or adds a UI string
+const upstreamFile = resolve(root, 'node_modules/maplibre-gl/src/ui/default_locale.ts');
+if (!existsSync(upstreamFile)) {
+    console.warn('note: maplibre-gl no longer ships src/ui/default_locale.ts, en.json is unchecked');
+} else {
+    const upstream = Object.fromEntries(
+        [...readFileSync(upstreamFile, 'utf8').matchAll(/^\s*'([^']+)':\s*'(.*)',$/gm)].map(
+            ([, key, value]) => [key, value]
+        )
+    );
+    if (Object.keys(upstream).length < 20) fail('could not parse maplibre-gl default_locale.ts');
+    for (const [key, value] of Object.entries(upstream)) {
+        if (!(key in esm.en)) fail(`en.json is missing upstream string '${key}': ${value}`);
+        else if (esm.en[key] !== value) fail(`en.json '${key}' now reads '${value}' upstream`);
+    }
+    for (const key of keys.filter((k) => !(k in upstream))) {
+        fail(`en.json has '${key}', which upstream no longer defines`);
+    }
 }
 
-// Catches the kw.ts shape (real strings, wrong language); untranslated and regional-variant copies are legitimate
+// Catches the kw.json shape (real strings, wrong language); untranslated and regional-variant copies are legitimate
 const baseLanguage = (code) => code.split('-')[0];
 const seen = new Map();
 for (const [code, locale] of Object.entries(esm.maplibreLocales)) {

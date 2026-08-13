@@ -118,10 +118,14 @@ A locale below 100% is still safe to use - untranslated strings fall back to Eng
 
 ## Contributing translations
 
-Translation files live in [`src/locales`](./src/locales), one file per locale,
-with [`src/locales/en.ts`](./src/locales/en.ts) as the English source. Every
-locale must define all of the UI string IDs - `npm test` fails the build
-otherwise.
+Translation files live in [`src/locales`](./src/locales) as flat JSON, one per
+locale, with [`en.json`](./src/locales/en.json) as the source. Translate the
+values only, as the keys are MapLibre's UI string IDs.
+
+To add a locale, copy `en.json` to `src/locales/<code>.json` and translate it.
+Nothing else needs editing, since the TypeScript exports are generated from
+these files at build time. Every locale must define all of the keys, or
+`npm test` fails.
 
 ## License
 

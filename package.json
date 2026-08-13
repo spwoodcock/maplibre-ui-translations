@@ -26,13 +26,15 @@
     "dist"
   ],
   "scripts": {
-    "build": "npm run build:esm && npm run build:umd && npm run build:cjs-types",
+    "build": "npm run build:locales && npm run build:esm && npm run build:umd && npm run build:cjs-types",
+    "build:locales": "node scripts/build-locales.mjs",
     "build:esm": "tsc",
     "build:umd": "rolldown -c",
     "build:cjs-types": "node scripts/emit-cjs-types.mjs",
     "check:locales": "node test/check-locales.mjs",
     "demo": "npm run build && echo 'Demo: http://localhost:4173/test/' && serve . --listen 4173",
     "test": "npm run build && npm run check:locales",
+    "prepare": "npm run build:locales",
     "prepublishOnly": "npm test"
   },
   "keywords": [
@@ -45,9 +47,9 @@
   ],
   "devDependencies": {
     "maplibre-gl": "^6.3.0",
-    "rolldown": "1.0.0-beta.42",
+    "rolldown": "^1.2.4",
     "serve": "^14.2.6",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "maplibre-gl": ">=2.0.0"

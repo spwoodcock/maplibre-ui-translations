@@ -1,2 +1,5 @@
 node_modules
 dist
+
+# Generated from src/locales/*.json by scripts/build-locales.mjs
+src/locales.generated.ts

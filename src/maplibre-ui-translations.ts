@@ -1,38 +1,11 @@
 import type { Map as MapLibreMap } from 'maplibre-gl';
 
-import { en } from './locales/en.js';
-import { de } from './locales/de.js';
-import { es } from './locales/es.js';
-import { et } from './locales/et.js';
-import { fr } from './locales/fr.js';
-import { id } from './locales/id.js';
-import { it } from './locales/it.js';
-import { ja } from './locales/ja.js';
-import { kw } from './locales/kw.js';
-import { ne } from './locales/ne.js';
-import { pt } from './locales/pt.js';
-import { ptBR } from './locales/pt-BR.js';
-import { ru } from './locales/ru.js';
+import { en, maplibreLocales, type MaplibreLocale } from './locales.generated.js';
 
-export type LocaleKey = keyof typeof en;
-export type MaplibreLocale = Record<LocaleKey, string>;
+// Re-exported wholesale so a new src/locales/<code>.json needs no change here
+export * from './locales.generated.js';
 
-// `satisfies` fails the build if a locale is missing a string
-const maplibreLocales = {
-    en,
-    de,
-    es,
-    et,
-    fr,
-    id,
-    it,
-    ja,
-    kw,
-    ne,
-    pt,
-    'pt-BR': ptBR,
-    ru,
-} satisfies Record<string, MaplibreLocale>;
+const CONTROL_POSITIONS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 
 interface ControlWithContainer {
     _container?: HTMLElement;
@@ -65,8 +38,7 @@ function updateMaplibreLocale(map: MapLibreMap, localeCode: string) {
             const controlElement = control._controlContainer || control._container;
 
             if (controlElement && container) {
-                const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
-                for (const pos of positions) {
+                for (const pos of CONTROL_POSITIONS) {
                     const corner = container.querySelector(`.maplibregl-ctrl-${pos}`);
                     if (corner && corner.contains(controlElement)) {
                         position = pos;
@@ -104,19 +76,6 @@ function updateMaplibreLocale(map: MapLibreMap, localeCode: string) {
 
 export {
     updateMaplibreLocale,
-    maplibreLocales,
-    en,
     // Alias so the old maplibre-gl/src/ui/default_locale import is a one-line swap
-    en as defaultLocale,
-    de,
-    es,
-    et,
-    fr,
-    it,
-    ja,
-    kw,
-    ne,
-    pt,
-    ptBR,
-    ru
+    en as defaultLocale
 };
